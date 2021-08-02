@@ -2,24 +2,8 @@
 
 let lang = 'ru',
   daysOfWeek  = {
-    en: [
-      'Monday',	
-      'Tuesday',	
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ],
-    ru: [
-      'Понедельник',
-      'Вторник',
-      'Среда',
-      'Четверг',
-      'Пятница',
-      'Суббота',
-      'Воскресенье'
-    ]
+    en: [ 'Monday',	'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ],
+    ru: [ 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье' ]
   },
   namePerson = 'Артем';
 
@@ -38,7 +22,7 @@ switch (lang) {
     console.log(`Понедельник Вторник Среда Четверг Пятница Суббота Воскресенье`);
     break;
   case 'en':
-    console.log(`Monday TuesdayWednesday Thursday Friday Saturday Sunday`);
+    console.log(`Monday Tuesday Wednesday Thursday Friday Saturday Sunday`);
 }
 
 console.log('Решение c:');
