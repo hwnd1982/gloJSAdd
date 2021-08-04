@@ -1,42 +1,36 @@
 'use strict';
 
-let lang = 'ru',
+let lang = confirm('a) Отбразить данные на русском?') ? 'ru' : 'en',
   daysOfWeek  = {
     en: [ 'Monday',	'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ],
     ru: [ 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье' ]
   },
-  namePerson = 'Артем';
+  namePerson;
 
 console.log('Решение a:');
 if (lang === 'ru') {
-  console.log(`Понедельник Вторник Среда Четверг Пятница Суббота Воскресенье`);
+  console.log(...daysOfWeek.ru);
 }
 if (lang === 'en') {
-  console.log(`Monday TuesdayWednesday Thursday Friday Saturday Sunday`);
+  console.log(...daysOfWeek.en);
 }
 
 console.log('Решение b:');
-lang = 'en';
+lang = confirm('b) Отбразить данные на русском?') ? 'ru' : 'en';
 switch (lang) {
   case 'ru':  
-    console.log(`Понедельник Вторник Среда Четверг Пятница Суббота Воскресенье`);
+    console.log(...daysOfWeek.ru);
     break;
   case 'en':
-    console.log(`Monday Tuesday Wednesday Thursday Friday Saturday Sunday`);
+    console.log(...daysOfWeek.en);
 }
 
 console.log('Решение c:');
-lang = 'ru';
+lang = confirm('c) Отбразить данные на русском?') ? 'ru' : 'en';
 console.log(...daysOfWeek[lang]);
 
-console.log(`${namePerson === 'Артем' ? namePerson + ' - директор' :
-  namePerson === 'Максим' ? namePerson + ' - преподаватель' :
-  namePerson + ' - студент'}`);
-namePerson = 'Максим';
-console.log(`${namePerson === 'Артем' ? namePerson + ' - директор' :
-  namePerson === 'Максим' ? namePerson + ' - преподаватель' :
-  namePerson + ' - студент'}`);
-namePerson = 'Кирилл';
-console.log(`${namePerson === 'Артем' ? namePerson + ' - директор' :
+namePerson = prompt('Введите имя:');
+console.log(`${!namePerson ? 'Вы ничего не ввели...' : 
+  namePerson === 'Артем' ? namePerson + ' - директор' :
   namePerson === 'Максим' ? namePerson + ' - преподаватель' :
   namePerson + ' - студент'}`);
