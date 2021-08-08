@@ -1,27 +1,23 @@
 'use strict';
 
-const arr = ['33242', '234325', '44234', '5252623', '231', '6621', '46879767'],
-  checkСondition = (item, ...conditions) => {
-    return conditions.reduce((check , condition) => {
-      return check ? true : Number(item[0]) === condition ? true : false;
-    }, false);
-  },
-  getNumByConditions = (arr, ...conditions) => {
+const arr = ['123456', '234561', '345612', '456123', '561234', '612343', '432165'],
+  getNumsStartingWithTwoOrFour = (arr) => {
+    let i = 0;
     return arr.reduce((resultArr, item) => {
-      if (checkСondition(item, ...conditions)) {
+      if (item[0] === '2' || item[0] === '4') {
         resultArr.push(item);
-      }
+      } 
       return resultArr;
     }, []);
   },
-  checkPrimeNumber = (num, prevPrimeNumbers) => {
-    return prevPrimeNumbers.reduce((check, item) => {
-      return !check ? false : num % item !== 0 ? true : false;
-    }, true);
-  },
   getPrimeNumbers = (begin, end) => {
-    let result = [];
-    for (let i = begin; i !== end; end - begin > 0 ? i++ : i--) {
+    let result = [],
+    checkPrimeNumber = (num, prevPrimeNumbers) => {
+      return prevPrimeNumbers.reduce((check, item) => {
+        return !check ? false : num % item !== 0 ? true : false;
+      }, true);
+    };
+    for (let i = begin; i !== end; i++) {
       if (i > 1) {
         if (checkPrimeNumber(i, result)) { 
           result.push(i);
@@ -31,7 +27,7 @@ const arr = ['33242', '234325', '44234', '5252623', '231', '6621', '46879767'],
     return result;
   };
 
-console.log(getNumByConditions(arr, 2, 4));
+console.log('Числа начинающиеся с 2 или 4:', ...getNumsStartingWithTwoOrFour(arr));  
 getPrimeNumbers(0, 100).forEach((item) => {
   console.log(`${item}: Делители этого числа: 1 и ${item}`);
 });
