@@ -1,11 +1,6 @@
 'use strict';
 
 const
-  daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-  monthOfYear = ['января', 'февраля', 'марта', 
-    'апреля', 'мая', 'июня', 
-    'июля', 'августа', 'сентября', 
-    'октября', 'ноября', 'декабря'],
   fullRecord = document.body.appendChild(document.createElement('p')),
   minRecord = document.body.appendChild(document.createElement('p')),
   getDeclensionOfStringByNumber = (num, expressions) => { 
@@ -22,9 +17,21 @@ const
   getFormattedNumber = (num) => {
     return num > 9 ? ('' + num)  : ('0' + num);
   },
-  watchFullFormat = function() {
-    const today = new Date();
-    fullRecord.textContent = `Сегодня ${
+  setStyle = (elem) => {
+    elem.style.fontSize = '18px';
+    elem.style.fontWeight = 'bold';
+    elem.style.color = 'red';
+    elem.style.fontFamily = 'Roboto, sans-serif';
+  },
+  watchFullFormat = function(elem) {
+    const 
+      daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+      monthOfYear = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+        'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+      today = new Date();
+
+    setStyle(elem);
+    elem.textContent = `Сегодня ${
         daysOfWeek[today.getDay() - 1]
       }, ${
         today.getDate()
@@ -40,9 +47,11 @@ const
         getDeclensionOfStringByNumber(today.getSeconds(), ['секунда', 'секунды', 'секунд'])
       }`;
   },
-  watchMinFormat = () => {
+  watchMinFormat = (elem) => {
     const today = new Date();
-    minRecord.textContent = `${
+
+    setStyle(elem);
+    elem.textContent = `${
         getFormattedNumber(today.getDate())
       }.${
         getFormattedNumber(today.getMonth())
@@ -57,8 +66,5 @@ const
       }`;
   };
 
-fullRecord.style.fontSize = '20px';
-fullRecord.style.fontWeight = 'bold';
-minRecord.style.fontSize = '20px';
 setInterval(watchFullFormat, 1000, fullRecord);
-setInterval(watchMinFormat, 1000, fullRecord);
+setInterval(watchMinFormat, 1000, minRecord);
