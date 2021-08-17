@@ -25,21 +25,12 @@ const
   },
   watchFullFormat = function(elem) {
     const 
-      daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-      monthOfYear = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-        'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
       today = new Date();
-
+    let date = today.toLocaleDateString("ru", {weekday: "long", year: "numeric", month: "long",day: "numeric"});
+    
     setStyle(elem);
-    elem.textContent = `Сегодня ${
-        daysOfWeek[today.getDay() - 1]
-      }, ${
-        today.getDate()
-      } ${
-        monthOfYear[today.getMonth()]
-      } ${
-        today.getFullYear()
-      } года, ${
+    date = `${date[0].toUpperCase() + date.slice(1, -1)}ода`;
+    elem.textContent = `Сегодня ${date}, ${
         getDeclensionOfStringByNumber(today.getHours(), ['час', 'часа', 'часов'])
       } ${
         getDeclensionOfStringByNumber(today.getMinutes(), ['минута', 'минуты', 'минут'])
@@ -49,21 +40,13 @@ const
   },
   watchMinFormat = (elem) => {
     const today = new Date();
-
+    
     setStyle(elem);
     elem.textContent = `${
-        getFormattedNumber(today.getDate())
-      }.${
-        getFormattedNumber(today.getMonth())
-      }.${
-        getFormattedNumber(today.getFullYear())
-      } - ${
-        getFormattedNumber(today.getHours())
-      }:${
-        getFormattedNumber(today.getMinutes())
-      }:${
-        getFormattedNumber(today.getSeconds())
-      }`;
+      today.toLocaleDateString("ru", {year: "numeric", month: "numeric", day: "numeric"})
+    } - ${
+      today.toLocaleTimeString("ru", {hour: "numeric", minute: "numeric", second: "numeric"})
+    }`;
   };
 
 setInterval(watchFullFormat, 1000, fullRecord);
