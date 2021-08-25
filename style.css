@@ -1,0 +1,15 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  color: aliceblue;
+}
+.wrapp {
+  padding-top: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.chenge-color {
+  border: none;
+  padding: 15px 30px;
+  border-radius: 5px;
+}
