@@ -7,12 +7,10 @@ const DomElement = function(selector, height, width, bg, fontSize) {
   this.bg = bg;
   this.fontSize = fontSize;
 },
-blockGeen = new DomElement('.block', '150px', '600px', 'green', '16px'),
-blockRed = new DomElement('.block', '', '300px', 'red', '20px'),
-best = new DomElement('#best', '100px', '100%');
+block = new DomElement('.block', '80px', '80px', 'green', '10px');
 
 DomElement.prototype.addToPage = function () {
-  let newElem, text;
+  let newElem;
   
   switch (this.selector[0]) {
     case '.' : 
@@ -25,18 +23,48 @@ DomElement.prototype.addToPage = function () {
       break;
   }
   if (newElem) {
-    text = `${this.height ? `height: ${this.height};`: ''}
+    newElem.style.cssText = `position: absolute;
+      border-radius: 10px;
+      padding: 10px;
+      top: calc(50% + -50px);
+      right: calc(50% + -50px);
+      ${this.height ? `height: ${this.height};`: ''}
       ${this.width ? `width: ${this.width};` : ''}
       ${this.bg ? `background-color: ${this.bg};` : ''}
       ${this.fontSize ? `font-size: ${this.fontSize};` : ''}`;
-    newElem.style.cssText = text;
-    document.body.append(newElem);
-    newElem.innerText = `${newElem.tagName === 'P' ? 
-      `Параграф: id = "${newElem.id}"` : 
-      `Блок : class = "${newElem.className}"`}\n\n${text}`;
+    this.elem = document.body.appendChild(newElem);
+    document.addEventListener('keydown', this.moveElem.bind(this));
+  }
+};
+DomElement.prototype.moveElem = function (event) {
+  let position = this.elem.getBoundingClientRect();
+  
+  switch (event.key) {
+    case 'ArrowUp':
+      if (position.y - 10 > 0) {
+        this.elem.style.top = 
+          `calc(50% + ${+(this.elem.style.top.match(/-?\d+px/)+ '').slice(0,-2) - 10}px)`;
+      }
+      break;
+    case 'ArrowDown':
+      if (window.innerHeight - position.y - position.height - 10 > 0) {
+        this.elem.style.top = 
+          `calc(50% + ${+(this.elem.style.top.match(/-?\d+px/)+ '').slice(0,-2) + 10}px)`;
+      }      
+      break;
+    case 'ArrowLeft':
+      if (position.x - 10 > 0) {
+        this.elem.style.right = 
+          `calc(50% + ${+(this.elem.style.right.match(/-?\d+px/)+ '').slice(0,-2) + 10}px)`;
+      }
+      break;
+    case 'ArrowRight': 
+      if (window.innerWidth - position.x - position.width - 10 > 0) {
+        this.elem.style.right = 
+          `calc(50% + ${+(this.elem.style.right.match(/-?\d+px/)+ '').slice(0,-2) - 10}px)`;
+      } 
+      break;
   }
 };
 
-blockGeen.addToPage();
-best.addToPage();
-blockRed.addToPage();
+block.addToPage();
