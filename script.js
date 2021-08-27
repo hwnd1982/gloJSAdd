@@ -7,9 +7,9 @@ const DomElement = function(selector, height, width, bg, fontSize) {
   this.bg = bg;
   this.fontSize = fontSize;
 },
-blockGeen = new DomElement('.block', '150px', '600px', 'green', '16px'),
-blockRed = new DomElement('.block', '', '300px', 'red', '20px'),
-best = new DomElement('#best', '100px', '100%');
+blockGeen = new DomElement('.block', '150px', '600px', '#3eba98', '16px'),
+blockRed = new DomElement('.block', '', '300px', '#d12763', '20px'),
+best = new DomElement('#best', '100px', '100%', '#f2be1a');
 
 DomElement.prototype.addToPage = function () {
   let newElem, text;
