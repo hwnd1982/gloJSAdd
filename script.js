@@ -22,7 +22,6 @@ const
 
     do {
       login = prompt('Придумайте Логин:');
-
       checkMatch = userList.reduce((checkMatch, item) => {
         if (getUserLogin(item) === login) {
           return true;
