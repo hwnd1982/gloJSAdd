@@ -6,8 +6,7 @@ const DomElement = function(selector, height, width, bg, fontSize) {
   this.width = width; 
   this.bg = bg;
   this.fontSize = fontSize;
-},
-block = new DomElement('.block', '80px', '80px', '#9664da');
+};
 
 DomElement.prototype.addToPage = function () {
   let newElem;
@@ -25,7 +24,6 @@ DomElement.prototype.addToPage = function () {
   if (newElem) {
     newElem.style.cssText = `position: absolute;
       border-radius: 10px;
-      padding: 10px;
       top: calc(50% + -50px);
       right: calc(50% + -50px);
       ${this.height ? `height: ${this.height};`: ''}
@@ -66,5 +64,7 @@ DomElement.prototype.moveElem = function (event) {
       break;
   }
 };
+
+const block = new DomElement('.block', '100px', '100px', '#9664da');
 
 block.addToPage();
