@@ -1,6 +1,6 @@
 'use strict';
 
-const DomElement = function(selector, height, width, bg, fontSize) {
+const DomElement = function({selector, height = '100px', width = '100px', bg, fontSize}) {
   this.selector = selector; 
   this.height = height; 
   this.width = width; 
@@ -65,6 +65,6 @@ DomElement.prototype.moveElem = function (event) {
   }
 };
 
-const block = new DomElement('.block', '100px', '100px', '#9664da');
+const block = new DomElement({selector: '.block', bg: '#9664da'});
 
 block.addToPage();
