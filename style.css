@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+.users-list {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+}
+.users-list::before {
+  position: absolute;
+  left: 0;
+  content: "Список пользователей пуст...";
+  width: 100%;
+  text-align: center;
+  z-index: -1;
+}
+.user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+  background-color: #fff;
+}
