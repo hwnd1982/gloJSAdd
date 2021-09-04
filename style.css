@@ -33,7 +33,8 @@
 }
 .buttons {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   width: 350px;
   bottom: -300px;
@@ -49,6 +50,28 @@
   border: none;
   background-color: #4aa1de;
 }
+.start-stop {
+  grid-column: 1;
+  justify-self: start;
+}
 .reset {
   display: none;
+  grid-column: 2;
+  justify-self: end;
+}
+
+@media (max-width: 567px) {
+  .buttons {
+    gap: 20px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .start-stop {
+    justify-self: center;
+  }
+  .reset {
+    justify-self: center;
+    grid-column: 1;
+    grid-row: 2;
+  }
 }
