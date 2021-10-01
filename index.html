@@ -1,14 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>gloJS Additional</title>
-</head>
-<body>
-
-  <script src="script.js" defer></script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gloJS Additional</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="currency-exchange">
+      <h2 tabindex="100" class="currency-exchange__title">Конвертер валют</h2>
+      <div class="currency-exchange__wrapp">
+        <div class="currency-exchange__item">
+          <label class="currency-exchange__label" for="currency-current">У меня есть</label>
+          <div class="currency-exchange__combobox combobox">
+            <div class="combobox__item">
+              <input
+                id="currency-value-current"
+                type="text"
+                class="combobox__input"
+              />
+            </div>
+            <div class="combobox__divider">
+              <div></div>
+            </div>
+            <div class="combobox__currency">
+              <div class="combobox__currency-wrapp">
+                <span class="combobox__select-currency_custom-wrapp">
+                  <span class="combobox__select-currency_custom-single">
+                    <span id="currency-current" class="combobox__select-currency_custom-single-selected">RUR</span>
+                    <span class="combobox__selection_custom-arrow"">
+                      <b></b>
+                    </span>
+                  </span>
+                  <span class="combobox__select-currency_custom-dropdown dropdown">
+                    <span class="dropdown__wrapp">
+                      <ul id="currency-list-current" class="dropdown__currency-select">
+                        <li class="dropdown__currency-item">RUR</li>
+                        <li class="dropdown__currency-item">EUR</li>
+                        <li class="dropdown__currency-item">USD</li>
+                      </ul>
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="currency-exchange__item currency-exchange__item_combo">
+          <div class="currency-exchange__item">
+          <label class="currency-exchange__label" for="currency-new">Мне надо получить</label>
+          <div class="currency-exchange__combobox combobox">
+            <div class="combobox__item">
+              <input
+                id="currency-value-new"
+                type="text"
+                class="combobox__input"
+              />
+            </div>
+            <div class="combobox__divider">
+              <div></div>
+            </div>
+            <div class="combobox__currency">
+              <div class="combobox__currency-wrapp">
+                <span class="combobox__select-currency_custom-wrapp">
+                  <span class="combobox__select-currency_custom-single">
+                    <span id="currency-new"  class="combobox__select-currency_custom-single-selected">USD</span>
+                    <span class="combobox__selection_custom-arrow">
+                      <b></b>
+                    </span>
+                  </span>
+                  <span class="combobox__select-currency_custom-dropdown dropdown">
+                    <span class="dropdown__wrapp">
+                      <ul id="currency-list-new" class="dropdown__currency-select">
+                        <li class="dropdown__currency-item">RUR</li>
+                        <li class="dropdown__currency-item">EUR</li>
+                        <li class="dropdown__currency-item">USD</li>
+                      </ul>
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="currency-exchange__info-ex"></div>
+    </div>
+    <script src="script.js" defer></script>
+  </body>
 </html>
