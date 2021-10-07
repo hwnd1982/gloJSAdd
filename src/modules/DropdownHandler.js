@@ -19,7 +19,7 @@ const
   };
 
 export class DropdownHandler {
-  constructor(localData, localCountryName) {
+  constructor(data) {
     const dropdown = document.querySelector('.dropdown');
 
     dropdown.innerHTML = `<div class="dropdown-lists"></div>`;
@@ -28,8 +28,7 @@ export class DropdownHandler {
         overflow: hidden;
         position: relative;
       `;
-    this.data = localData;
-    this.localCountryName = localCountryName;
+    this.data = data;
     this.selectCities = document.getElementById('select-cities'),
     this.button = document.querySelector('.button'),
     this.closeButton = document.querySelector('.close-button'),
@@ -80,6 +79,16 @@ export class DropdownHandler {
       if (target === this.selectCities) {
         this.closeButton.style.display = 'block';
         this.selectCities.classList.add('no-empty');
+        this.defaultList.parentElement.style.cssText =
+          `
+            position: relative;
+            transform: translate(0, 0);
+          `;
+        this.selectList.parentElement.style.cssText =
+          `
+            position: absolute;
+            transform: translate(100%, 0);
+          `;
         this.show().clean().show(this.selectList);
       }
       if (target === this.button && this.button.getAttribute('href') !== '#') {
@@ -91,7 +100,17 @@ export class DropdownHandler {
         this.selectCities.value = '';
         this.closeButton.style.display = '';
         this.button.href = '#';
-        this.hidden();
+        this.defaultList.parentElement.style.cssText =
+          `
+            position: relative;
+            transform: translate(0, 0);
+          `;
+        this.selectList.parentElement.style.cssText =
+          `
+            position: absolute;
+            transform: translate(100%, 0);
+          `;
+        this.clean().hidden();
       }
     });
     this.selectCities.addEventListener('input', () => {
@@ -163,31 +182,28 @@ export class DropdownHandler {
     return this;
   }
   render(list, countCities, data = this.data, inputValue) {
-    data
-      .sort((a, b) =>
-        (a.country === b.country ? 0 : a.country > b.country || b.country === this.localCountryName ? 1 : -1))
-      .forEach(item => {
-        const
-          cities = item.cities.sort((a, b) => (+a.count === +b.count ? 0 : +a.count < +b.count ? 1 : -1))
-            .reduce((citiesList, city, index) => (citiesList += countCities && index >= countCities ? '' :
-              ` <div class="dropdown-lists__line">
+    data.forEach(item => {
+      const
+        cities = item.cities.sort((a, b) => (+a.count === +b.count ? 0 : +a.count < +b.count ? 1 : -1))
+          .reduce((citiesList, city, index) => (citiesList += countCities && index >= countCities ? '' :
+            ` <div class="dropdown-lists__line">
                   <div class="dropdown-lists__city">${inputValue ?
-                city.name.replace(inputValue, '<b>$&</b>') : city.name}</div>
+              city.name.replace(inputValue, '<b>$&</b>') : city.name}</div>
                   <div class="dropdown-lists__count">${city.count}</div>
                 </div>`), ''),
-          country = item.country ?
-            ` <div class="dropdown-lists__total-line">
+        country = item.country ?
+          ` <div class="dropdown-lists__total-line">
                 <div class="dropdown-lists__country">${item.country}</div>
                 <div class="dropdown-lists__count">${item.count}</div>
               </div>` : '',
-          block =
+        block =
             ` <div class="dropdown-lists__countryBlock">
                 ${country}
                 ${cities ? cities : '<div class="dropdown-lists__line">Ничего не найдено...</div>'}
               </div>`;
 
-        list.innerHTML += block;
-      });
+      list.innerHTML += block;
+    });
     return this;
   }
 }

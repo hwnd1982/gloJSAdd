@@ -74,9 +74,16 @@ export const dataRequest = (Handler, local) => {
     }
     return (response.json());
   }).then(data => {
-    const localCountryName = { RU: 'Россия', EN: 'United Kingdom', DE: 'Deutschland' }[local];
-
-    new Handler(data[local], localCountryName);
+    const
+      localCountryName = { RU: 'Россия', EN: 'United Kingdom', DE: 'Deutschland' }[local],
+      localData = data[local].sort((a, b) => (a.country === b.country ? 0 : a.country > b.country ? 1 : -1))
+        .reduce((data, item) => {
+          item.country === localCountryName ? data.unshift(item) : data.push(item);
+          return data;
+        }, []);
+    localStorage.clear();
+    localStorage.setItem('localData', JSON.stringify(localData));
+    new Handler(localData);
     setTimeout(() => overlay.remove(), 750);
   }).catch(error => console.error(error));
 };
