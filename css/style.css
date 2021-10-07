@@ -94,6 +94,14 @@ body .main .input-cities label {
   color: #fff;
 }
 
+body .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .button {
   width: 100%;
   max-width: 290px;

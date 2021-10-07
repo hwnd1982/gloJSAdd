@@ -1,10 +1,4 @@
-import data from "./modules/db_cities";
+import { dataRequest } from "./modules/dataRequest";
 import { DropdownHandler } from './modules/DropdownHandler';
 
-const
-  local = 'RU',
-  localData = data[local],
-  localCountryName = { RU: 'Россия', EN: 'United Kingdom', DE: 'Deutschland' }[local];
-
-new DropdownHandler(localData, localCountryName);
-
+dataRequest(DropdownHandler, 'RU');
