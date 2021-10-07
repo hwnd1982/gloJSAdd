@@ -1,25 +1,84 @@
 export class DropdownHandler {
-  constructor(dropdown, data, locality) {
-    this.data = data;
-    this.locality = locality;
-    this.localityName = { RU: 'Россия', EN: 'United Kingdom', DE: 'Deutschland' }[locality];
+  constructor(localData, localCountryName) {
+    const dropdown = document.querySelector('.dropdown');
+
     dropdown.innerHTML = `<div class="dropdown-lists"></div>`;
-    this.defaultList = this.createList(dropdown, 'default');
-    this.selectList = this.createList(dropdown, 'select');
-    this.autocompleteList = this.createList(dropdown, 'autocomplete');
+    this.data = localData;
+    this.localCountryName = localCountryName;
+    this.selectCities = document.getElementById('select-cities'),
+    this.button = document.querySelector('.button'),
+    this.closeButton = document.querySelector('.close-button'),
+    this.defaultList = this.createList(dropdown.firstElementChild, 'default');
+    this.selectList = this.createList(dropdown.firstElementChild, 'select');
+    this.autocompleteList = this.createList(dropdown.firstElementChild, 'autocomplete');
     this.render(this.defaultList, 3).hidden();
 
-    this.defaultList.parentElement.addEventListener('click', ({ target }) => {
-      if (target.closest('.dropdown-lists__total-line')) {
-        this.hidden().clean(this.selectList).render(this.selectList, 0, [this.data[this.locality]
-          .find(item =>
-            item.country === target.closest('.dropdown-lists__total-line').firstElementChild.textContent)])
-          .show(this.selectList);
+    dropdown.parentElement.addEventListener('click', ({ target }) => {
+      if (!target.closest('.dropdown') && target !== this.selectCities && target !== this.button && this.closeButton) {
+        return;
+      }
+      if (target.closest('.dropdown')) {
+        if (target.closest('.dropdown-lists__total-line')) {
+          if (target.closest('.dropdown-lists__list--default')) {
+            this.hidden().clean(this.selectList).render(this.selectList, 0, [this.data.find(item =>
+              item.country === target.closest('.dropdown-lists__total-line').firstElementChild.textContent)])
+              .show(this.selectList);
+          }
+          if (target.closest('.dropdown-lists__list--select')) {
+            this.clean().hidden().show(this.defaultList);
+          }
+          this.selectCities.value = target.closest('.dropdown-lists__total-line').firstElementChild.textContent;
+          this.button.href = '#';
+        }
+        if (target.closest('.dropdown-lists__line')) {
+          const city = this.data.map(item => item.cities.find(item =>
+            item.name === target.closest('.dropdown-lists__line').firstElementChild.textContent)
+          ).filter(item => item)[0];
+          this.button.href = city.link;
+          this.selectCities.value = city.name;
+        }
+        this.selectCities.classList.add('no-empty');
+        this.closeButton.style.display = 'block';
+      }
+      if (target === this.selectCities) {
+        this.selectCities.classList.add('no-empty');
+        this.show();
+      }
+      if (target === this.button && this.button.getAttribute('href') !== '#') {
+        this.selectCities.value = '';
+        this.hidden();
+      }
+      if (target === this.closeButton) {
+        this.selectCities.classList.remove('no-empty');
+        this.selectCities.value = '';
+        this.closeButton.style.display = '';
+        this.button.href = '#';
+        this.hidden();
       }
     });
-    this.selectList.parentElement.addEventListener('click', ({ target }) => {
-      if (target.closest('.dropdown-lists__total-line')) {
-        this.clean().hidden().show(this.defaultList);
+    this.selectCities.addEventListener('input', () => {
+      if (this.selectCities.value) {
+        const list = this.data.reduce((list, country) => {
+          const cities = country.cities.reduce((list, city) => {
+            const reg = new RegExp(`^(${this.selectCities.value.toLowerCase()})`);
+
+            if (city.name.toLowerCase().match(reg)) {
+              list.push(city);
+            }
+            return list;
+          }, []);
+          cities ? list.push(...cities) : null;
+          return list;
+        }, []);
+        this.selectCities.classList.add('no-empty');
+        this.clean().hidden()
+          .render(this.autocompleteList, 0, [{ cities: list }])
+          .show(this.autocompleteList);
+        this.closeButton.style.display = 'block';
+      } else {
+        this.autocompleteList.parentElement.style.display !== 'none' ?
+          this.clean().hidden().show(this.defaultList) :
+          this.clean().hidden();
       }
     });
   }
@@ -51,9 +110,10 @@ export class DropdownHandler {
     list.parentElement.style.display = 'block';
     return this;
   }
-  render(list, countCities, data = this.data[this.locality]) {
+  render(list, countCities, data = this.data) {
     data
-      .sort((a, b) => (a.country === b.country ? 0 : a.country > b.country || b.country === this.localityName ? 1 : -1))
+      .sort((a, b) =>
+        (a.country === b.country ? 0 : a.country > b.country || b.country === this.localCountryName ? 1 : -1))
       .forEach(item => {
         const
           cities = item.cities.sort((a, b) => (+a.count === +b.count ? 0 : +a.count < +b.count ? 1 : -1))
