@@ -79,19 +79,13 @@ export class DropdownHandler {
         this.closeButton.style.display = 'block';
       }
       if (target === this.selectCities) {
+        if (this.selectList.parentElement.style.transform === 'translate(0%, 0px)') {
+          this.addToggleListsAnimation(
+            this.selectList.parentElement, this.defaultList.parentElement, false, true, this.clean.bind(this));
+        }
         this.closeButton.style.display = 'block';
         this.selectCities.classList.add('no-empty');
-        this.defaultList.parentElement.style.cssText =
-          `
-            position: relative;
-            transform: translate(0, 0);
-          `;
-        this.selectList.parentElement.style.cssText =
-          `
-            position: absolute;
-            transform: translate(100%, 0);
-          `;
-        this.hidden(this.autocompleteList).show().clean().show(this.selectList);
+        this.hidden(this.autocompleteList).show().show(this.selectList);
       }
       if (target === this.button && this.button.getAttribute('href') !== '#') {
         this.selectCities.value = '';
