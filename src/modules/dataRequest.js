@@ -53,9 +53,10 @@ export class Overlay {
             cursor: pointer;
           }
           .item:hover {
-            background-color: #b7b7b7;
+            background-color: #c7c7c7;
           }
           .selected, .selected:hover {
+            color: #ffffff;
             background-color: #19b5fe;
           }
         </style>`;
