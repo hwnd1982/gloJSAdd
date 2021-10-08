@@ -19,7 +19,7 @@ const
   };
 
 export class DropdownHandler {
-  constructor(data) {
+  constructor(data, local) {
     const dropdown = document.querySelector('.dropdown');
 
     dropdown.innerHTML = `<div class="dropdown-lists"></div>`;
@@ -29,6 +29,7 @@ export class DropdownHandler {
         position: relative;
       `;
     this.data = data;
+    this.language = { RU: /[^а-яё-\s]/gi, EN: /[^a-z-\s]/gi, DE: /[^a-zäöüß-\s]/gi }[local];
     this.selectCities = document.getElementById('select-cities'),
     this.button = document.querySelector('.button'),
     this.closeButton = document.querySelector('.close-button'),
@@ -66,7 +67,8 @@ export class DropdownHandler {
           this.selectCities.value = target.closest('.dropdown-lists__total-line').firstElementChild.textContent;
           this.button.href = '#';
         }
-        if (target.closest('.dropdown-lists__line')) {
+        if (target.closest('.dropdown-lists__line') &&
+          target.closest('.dropdown-lists__line').textContent !== 'Ничего не найдено...') {
           const city = this.data.map(item => item.cities.find(item =>
             item.name === target.closest('.dropdown-lists__line').firstElementChild.textContent)
           ).filter(item => item)[0];
@@ -89,7 +91,7 @@ export class DropdownHandler {
             position: absolute;
             transform: translate(100%, 0);
           `;
-        this.show().clean().show(this.selectList);
+        this.hidden(this.autocompleteList).show().clean().show(this.selectList);
       }
       if (target === this.button && this.button.getAttribute('href') !== '#') {
         this.selectCities.value = '';
@@ -114,6 +116,8 @@ export class DropdownHandler {
       }
     });
     this.selectCities.addEventListener('input', () => {
+      this.selectCities.value = this.selectCities.value
+        .replace(/^[\s-]/, '').replace(this.language, '').replace(/[\s-]{2}/gi, ' ').replace(/[-]{2}/gi, '-');
       if (this.selectCities.value) {
         const list = this.data.reduce((list, country) => {
           const cities = country.cities.reduce((list, city) => {
@@ -188,7 +192,7 @@ export class DropdownHandler {
           .reduce((citiesList, city, index) => (citiesList += countCities && index >= countCities ? '' :
             ` <div class="dropdown-lists__line">
                   <div class="dropdown-lists__city">${inputValue ?
-              city.name.replace(inputValue, '<b>$&</b>') : city.name}</div>
+              city.name.replace(new RegExp(`^(${inputValue})`, 'i'), '<b>$&</b>') : city.name}</div>
                   <div class="dropdown-lists__count">${city.count}</div>
                 </div>`), ''),
         country = item.country ?
