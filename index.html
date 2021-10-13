@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>gloJS Additional</title>
-</head>
-<body>
-
-  <script src="script.js" defer></script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gloJS Additional</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div class="toolbar" style="border: 1px solide #000000; padding: 5px; display: flex; align-items: center; gap: 5px">
+      <input id="color" type="color" />
+      <input id="weight" type="range" step="1" min="1" max="10" value="1" />
+      <label for="weight">1</label>
+    </div>
+    <script src="./dist/dev-bundle.js" defer></script>
+  </body>
 </html>
