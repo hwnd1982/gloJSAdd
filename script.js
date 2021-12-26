@@ -5,8 +5,8 @@ const
   field = document.getElementById("field"),
   ball = document.getElementById("ball");
 
-const stateTop = { requestAnimation: 0, animationFrameId: 0, startTime: 0, pauseTime: 0 };
-const stateLeft = { requestAnimation: 0, animationFrameId: 0, startTime: 0, pauseTime: 0 };
+let stateTop = { requestAnimation: 0, animationFrameId: 0, startTime: 0, pauseTime: 0 };
+let stateLeft = { requestAnimation: 0, animationFrameId: 0, startTime: 0, pauseTime: 0 };
 
 function animate({ timing, draw, duration }, state) {
   state.startTime = performance.now();
@@ -52,8 +52,8 @@ start.onclick = function() {
   const to = field.clientHeight - ball.clientHeight;
   const width = 100;
 
-  stateTop.startTime = performance.now();
   if (stateTop.animationFrameId) cancelAnimationFrame(stateTop.animationFrameId);
+  stateTop = { requestAnimation: 0, animationFrameId: 0, startTime: performance.now(), pauseTime: 0 };
 
   stateTop.requestAnimation = animate({
     duration: 2000,
@@ -62,6 +62,9 @@ start.onclick = function() {
       ball.style.top = to * progress + "px";
     },
   }, stateTop);
+
+  if (stateLeft.animationFrameId) cancelAnimationFrame(stateLeft.animationFrameId);
+  stateLeft = { requestAnimation: 0, animationFrameId: 0, startTime: performance.now(), pauseTime: 0 };
 
   stateLeft.requestAnimation = animate({
     duration: 2000,
