@@ -60,5 +60,24 @@ async function editJSON() {
   result.innerHTML = JSON.stringify(await response.json());
 }
 
+async function createHTMLFile() {
+  const { value } = document.querySelector('#file');
+
+  const response = await fetch('./create.php', {
+    method: 'POST',
+    mode: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ filename: value })
+  }).catch(() => {
+    throw console.log('Отправить запись не удалось...');
+  });
+
+  const ready = await response.json();
+  if (ready) location = `./${value}.html`;
+}
+
 document.getElementById('send').addEventListener('click', sendJSON);
 document.getElementById('edit').addEventListener('click', editJSON);
+document.getElementById('create').addEventListener('click', createHTMLFile);
