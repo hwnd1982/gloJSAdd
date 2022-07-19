@@ -9,20 +9,24 @@ import ClassSelect from './js/components/ClassSelect';
 import Form from './js/components/Form';
 import Worker from './js/components/Worker';
 
-const app =  document.getElementById('app');
 const workerClasses = [Worker, Frontend];
 const workerClassesProps = workerClasses.reduce((obj, Item) => {
   obj[Item.type] = Item.props
   
   return obj;
 }, {});
+
+const app = document.getElementById('app');
+const storage = new Storage('worker', workerClasses);
+const form = new Form(storage);
 const select = new ClassSelect(['form-select', 'mb-3'], {
   children: workerClasses, 
   action: event => form.render(workerClassesProps[event.target.value])
 });
-const form = new Form(app, storage);
 
-const storage = new Storage('worker', workerClasses);
+const query = new DomElement('div', ['col-lg-12'], {children: [select.elem, form.elem]});
+const veiw = new DomElement('div', ['col-lg-12'], {children: []});
+
 const frontend = new Frontend({
   firstName: 'Кирилл',
   lastName: 'Лавров',
@@ -37,17 +41,8 @@ const frontend = new Frontend({
 // storage.add({ id: uid(),  test: 'for remove' });
 
 frontend.data = { experience: 'middle' };
-storage.data = [frontend.data];
+// storage.data = [frontend];
 
-new DomElement('div', ['container', 'mt-5'], {
-  parent: app,
-  children: [
-    new DomElement('div', ['row', 'mb-3'], {
-      children: [new DomElement('div', ['col-lg-12'], {children: [
-        select.elem,
-        form.elem
-      ]}).elem]
-    }).elem]
-});
+new DomElement('div', ['container', 'mt-5'], {parent: app, children: [query.elem, veiw.elem]});
 
-
+console.log(storage.data);

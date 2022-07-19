@@ -5,16 +5,17 @@ class Worker {
   static type = 'Worker';
   constructor({ firstName, lastName, age, gender, isChildren, profession }) {
     this._id = uid();
+    this._type = 'Worker';
     this._firstName = firstName;
     this._lastName = lastName;
     this._age = age;
     this._gender = gender;
     this._isChildren = isChildren;
-    this._profession = profession;
   }
 
   static get props() {
     return [
+      this.type,
       { label: 'Имя', tag: 'input', type: 'text', name: 'firstName'},
       { label: 'Фамилия', tag: 'input', type: 'text', name: 'lastName'},
       { label: 'Возраст', tag: 'input', type: 'number', name: 'age'},
@@ -22,7 +23,7 @@ class Worker {
         {text: 'Мужской', tag: 'option', value: 'male'}, 
         {text: 'Женский', tag: 'option', value: 'female'}
       ]},
-      { label: 'Дети', tag: 'input', type: 'checkbox', value: 'ischildren', name: 'ischildren', mode: 'switch'},
+      { label: 'Дети', tag: 'input', type: 'checkbox', value: true, name: 'isChildren'},
     ];
   }
 
@@ -42,32 +43,23 @@ class Worker {
     return agr;
   }
 
-  get name() {
-    return this._name;
-  }
-
-  set name(agr) {
-    return agr;
-  }
-
-  set data({ firstName, lastName, age, gender, isChildren, profession }) {
+  set data({ firstName, lastName, age, gender, isChildren }) {
     firstName && (this._firstName = firstName);
     lastName && (this._lastName = lastName);
     age && (this._age = age);
     gender && (this._gender = gender);
     isChildren && (this._isChildren = isChildren);
-    profession && (this._profession = profession);
   }
 
   get data() {
     return {
+      id: this.id,
       type: this.type,
       firstName: this._firstName,
       lastName: this._lastName,
       age: this._age,
       gender: this._gender,
       isChildren: this._isChildren,
-      profession: this._profession
     };
   }
 }

@@ -6,7 +6,7 @@ class Frontend extends Worker {
 
   constructor({ stack, experience, ...rest }) {
     super(rest);
-    
+    this._type = 'Frontend';
     this._stack = stack;
     this._experience = experience;
   }

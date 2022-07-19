@@ -2,8 +2,10 @@ class DomElement {
   constructor(elem = 'div', classes, options) {
     this._elem = document.createElement(elem);
     classes && (this.classes = classes);
-    options.children && (this.children = options.children);
-    options.parent && (this.parent = options.parent);
+    if (options) {
+      this.children = options.children ? options.children : [];
+      options.parent && (this.parent = options.parent);
+    }
   }
 
   get elem() {

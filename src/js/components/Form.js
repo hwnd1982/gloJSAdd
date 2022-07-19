@@ -1,8 +1,9 @@
 import DomElement from "./DomElement";
 
 class Form extends DomElement {
-  constructor(data) {
-    super('form', ['mb-3'], {children: []});
+  constructor(storage) {
+    super('form', ['mb-3']);
+    this.storage = storage;
     this.init();
   }  
 
@@ -11,7 +12,12 @@ class Form extends DomElement {
 
     this.elem.innerHTML = '';
     props.forEach((item, index) => {
-      !(index % 4) && (container = this.row());
+      if(!index) {
+        this.type = item;
+        return;
+      }
+
+      !((index - 1) % 4) && (container = this.row());
 
       this[item.tag] && (container.innerHTML += this[item.tag](item));
     });
@@ -22,11 +28,11 @@ class Form extends DomElement {
     const row = document.createElement('div');
     row.className = 'row mb-3';
 
-    console.log(this.children);
     this.children = [...(this.children ? this.children : []), row];
     
     return row;
   }
+
   button() {
     return `<button id="add" class="btn btn-primary">Сохранить</button>`;
   }
@@ -62,26 +68,25 @@ class Form extends DomElement {
     `;
   }
 
-  checkbox(prors) {
+  checkbox(props) {
     return `
       <div class="col-lg-3">
         <div class="form-check">
-          <input id="${prors.value}" name="${prors.name}" class="form-check-input" type="checkbox">
-          <label for="${prors.value}" class="form-check-label">${prors.label}</label>
+          <input id="${props.value}" name="${props.name}" value=${typeof props.value === 'boolean' ? props.value : `"${props.value}"`} class="form-check-input" type="checkbox">
+          <label for="${props.value}" class="form-check-label">${props.label}</label>
         </div>
       </div>
     `;
   }
   
   list(prors) {
-    console.log(prors);
     return `
       <div class="col-lg-3">
         <div class="form-check">
           <label class="form-check-label">${prors.label}</label>
-          <div class="row justify-content-start">
+          <fieldset class="row justify-content-start">
             ${prors.list.map(item => this.checkbox(item)).join('')}
-          </div>
+          </fieldset>
         </div>
       </div>
     `;
@@ -90,12 +95,18 @@ class Form extends DomElement {
   init() {
     this.elem.addEventListener('submit', event => {
       const formData = new FormData(event.target);
-      const body = {};
+      const body = {type: this.type};
 
-      formData.forEach((value, key) => body[key] = value);
-      
       event.preventDefault();
-      console.log(body);
+
+      for (const key of formData.keys()) {
+        const values = formData.getAll(key);
+
+        body[key] = values.length - 1 ? values : values[0];
+      }
+      
+      this.storage.add(body);
+      console.log(this.storage)
     });
   }
 }
