@@ -1,14 +1,37 @@
 class Storage {
-  constructor(key) {
-    this._key = key;
+  constructor(keyValue, classes = []) {
+    this._key = keyValue;
+    this._types = classes.reduce((obj, item) => {
+      obj[item.name] = item;
+      
+      return obj;
+    }, {});
   }
 
   isExist() {
     return !!localStorage.getItem(this._key);
   }
 
+  get key() {
+    return this._key;
+  }
+
+  set key(value) {
+    return this._key;
+  }
+
+  get types() {
+    return this._types;
+  }
+
+  set types(value) {
+    return;
+  }
+
   get data() {
-    return JSON.parse(localStorage.getItem(this._key)) || [];
+    const data = JSON.parse(localStorage.getItem(this._key)) || [];
+
+    return data.map(item => new this.types[item.name](item));
   }
 
   set data(data) {

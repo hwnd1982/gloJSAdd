@@ -1,6 +1,8 @@
-import uid from "../utils/uid";
+import uid from "../utils/uid.js";
 
 class Worker {
+  static name =  'Работник';
+  static type = 'Worker';
   constructor({ firstName, lastName, age, gender, isChildren, profession }) {
     this._id = uid();
     this._firstName = firstName;
@@ -12,18 +14,16 @@ class Worker {
   }
 
   static get props() {
-    return {
-      firstName: { label: 'Имя', type: 'input' },
-      lastName: { label: 'Фамилия', type: 'input' },
-      age: { label: 'Возраст', type: 'input' },
-      gender: { label: 'Пол', type: 'radio' },
-      isChildren: { label: 'Дети', type: 'checkbox' },
-      profession: { label: 'Должность', type: 'select' }
-    };
-  }
-
-  static set props(arg) {
-    return;
+    return [
+      { label: 'Имя', tag: 'input', type: 'text', name: 'firstName'},
+      { label: 'Фамилия', tag: 'input', type: 'text', name: 'lastName'},
+      { label: 'Возраст', tag: 'input', type: 'number', name: 'age'},
+      { label: 'Пол', tag: 'select', name: 'gender', options: [
+        {text: 'Мужской', tag: 'option', value: 'male'}, 
+        {text: 'Женский', tag: 'option', value: 'female'}
+      ]},
+      { label: 'Дети', tag: 'input', type: 'checkbox', value: 'ischildren', name: 'ischildren', mode: 'switch'},
+    ];
   }
 
   get id() {
@@ -31,7 +31,23 @@ class Worker {
   }
 
   set id(agr) {
-    return;
+    return agr;
+  }
+
+  get type() {
+    return this._type;
+  }
+
+  set type(agr) {
+    return agr;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(agr) {
+    return agr;
   }
 
   set data({ firstName, lastName, age, gender, isChildren, profession }) {
@@ -45,7 +61,7 @@ class Worker {
 
   get data() {
     return {
-      id: this._id,
+      type: this.type,
       firstName: this._firstName,
       lastName: this._lastName,
       age: this._age,
