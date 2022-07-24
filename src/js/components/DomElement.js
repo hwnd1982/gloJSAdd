@@ -1,10 +1,13 @@
 class DomElement {
-  constructor(elem = 'div', classes, options) {
+  constructor(elem = "div", classes, options) {
     this._elem = document.createElement(elem);
     classes && (this.classes = classes);
     if (options) {
       this.children = options.children ? options.children : [];
       options.parent && (this.parent = options.parent);
+      if (options.attributes)
+        for (const key in options.attributes)
+          this._elem.setAttribute(key, options.attributes[key]);
     }
   }
 
@@ -25,20 +28,20 @@ class DomElement {
   }
 
   get children() {
-    return this.elem.children;
+    return [...this.elem.children];
   }
 
   set children(children) {
-    this.elem.textContent = '';
+    this.elem.textContent = "";
     this.elem.append(...children);
   }
 
   get classes() {
-    return this.elem.className.split(' ');
+    return this.elem.className.split(" ");
   }
 
   set classes(classes) {
-    this.elem.className = '';
+    this.elem.className = "";
     this.elem.classList.add(...classes);
   }
 }
