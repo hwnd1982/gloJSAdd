@@ -72,8 +72,8 @@ class Form extends DomElement {
     return `
       <div class="col-lg-3">
         <div class="form-check">
-          <input id="${props.value}" name="${props.name}" value=${typeof props.value === 'boolean' ? props.value : `"${props.value}"`} class="form-check-input" type="checkbox">
-          <label for="${props.value}" class="form-check-label">${props.label}</label>
+          <input id="${props.name}" name="${props.name}" value="${props.value}" class="form-check-input" type="checkbox">
+          <label for="${props.name}" class="form-check-label">${props.label}</label>
         </div>
       </div>
     `;
@@ -102,7 +102,7 @@ class Form extends DomElement {
       for (const key of formData.keys()) {
         const values = formData.getAll(key);
 
-        body[key] = values.length - 1 ? values : values[0];
+        body[key] = values.length - 1 ? values : values[0] === 'true' ? true : values[0];
       }
       
       this.storage.add(body);
