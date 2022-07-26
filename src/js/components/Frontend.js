@@ -100,6 +100,10 @@ class Frontend extends Worker {
     stack && (this._stack = stack);
     experience && (this._experience = experience);
   }
+
+  get table() {
+    return [...super.table, this._experience, this._stack.join(', ')];
+  }
 }
 
 export default Frontend;

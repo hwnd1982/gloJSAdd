@@ -82,9 +82,7 @@ class Table extends DomElement {
     this.storage.data.forEach((item) => {
       const row = new DomElement("tr");
 
-      row.elem.innerHTML = `
-        ${item.type}
-      `;
+      row.elem.innerHTML = `${item.table.map(td => `<td>${td}</td>`).join(' ')}`;
 
       this.table[item.type].append(row.elem);
     });

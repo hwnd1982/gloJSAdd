@@ -71,6 +71,16 @@ class Worker {
       isChildren: this._isChildren,
     };
   }
+
+  get table() {
+    return [
+      this.id,
+      `${this._firstName} ${this._lastName}`,
+      this._age,
+      this._gender === 'male' ? 'Мужской': 'Женский',
+      this._isChildren ? 'Есть' : 'Нет'
+    ];
+  }
 }
 
 export default Worker;
