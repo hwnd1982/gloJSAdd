@@ -19,11 +19,8 @@ const workerClassesProps = workerClasses.reduce((obj, Item) => {
 
 const storage = new Storage("worker", workerClasses);
 const table = new Table(storage);
-const form = new Form(storage, { action: table.render });
-const select = new ClassSelect(["form-select", "mb-3"], {
-  children: workerClasses,
-  action: (event) => form.render(workerClassesProps[event.target.value]),
-});
+const form = new Form(table);
+const select = new ClassSelect(form);
 
 const query = new DomElement("div", ["col-lg-12"], {
   children: [select.elem, form.elem],
@@ -34,5 +31,3 @@ const app = new DomElement("div", ["container", "mt-5"], {
   parent: document.getElementById("app"),
   children: [query.elem, veiw.elem],
 });
-
-console.log(storage.data);

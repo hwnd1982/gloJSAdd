@@ -6,20 +6,18 @@ class Table extends DomElement {
     this._tables = {};
     this._storage = storage;
 
-    console.log(storage.types);
     for (const key in storage.types) {
       this.table = storage.types[key];
     }
-    this.init();
+
+    this._controls = new DomElement("tr");
+    this._controls.innerHTML = `<button class="btn btn-danger" id="delBtn0">Удалить</button>`;
+
     this.render();
   }
 
   get storage() {
     return this._storage;
-  }
-
-  set storage(arg) {
-    return arg;
   }
 
   get table() {
@@ -78,15 +76,22 @@ class Table extends DomElement {
       .classList.toggle(button.dataset.bsToggle);
   }
 
-  render() {
+  clean() {
+    for (const key in this.table) this.table[key].textContent = "";
+  }
+
+  render = () => {
+    this.clean();
     this.storage.data.forEach((item) => {
       const row = new DomElement("tr");
 
-      row.elem.innerHTML = `${item.table.map(td => `<td>${td}</td>`).join(' ')}`;
+      row.elem.innerHTML = `${item.table
+        .map((td) => `<td>${td}</td>`)
+        .join(" ")}`;
 
       this.table[item.type].append(row.elem);
     });
-  }
+  };
 }
 
 export default Table;

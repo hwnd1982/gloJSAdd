@@ -1,18 +1,36 @@
 import DomElement from "./DomElement";
 
 class Form extends DomElement {
-  constructor(storage) {
-    super('form', ['mb-3']);
-    this.storage = storage;
+  constructor(table) {
+    super("form", ["mb-3"]);
+    this._table = table;
+    this._handler = null;
     this.init();
-  }  
+  }
 
-  render(props) {
+  get table() {
+    return this._table;
+  }
+
+  get storage() {
+    return this._table.storage;
+  }
+
+  set handler(handler) {
+    this._handler = handler;
+  }
+
+  get handler() {
+    return this._handler;
+  }
+
+  render = ({ target }) => {
+    const props = this.storage.types[target.value].props;
     let container = this.row();
 
-    this.elem.innerHTML = '';
+    this.elem.innerHTML = "";
     props.forEach((item, index) => {
-      if(!index) {
+      if (!index) {
         this.type = item;
         return;
       }
@@ -22,14 +40,14 @@ class Form extends DomElement {
       this[item.tag] && (container.innerHTML += this[item.tag](item));
     });
     this.elem.innerHTML += this.button();
-  }
+  };
 
   row() {
-    const row = document.createElement('div');
-    row.className = 'row mb-3';
+    const row = document.createElement("div");
+    row.className = "row mb-3";
 
     this.children = [...(this.children ? this.children : []), row];
-    
+
     return row;
   }
 
@@ -38,7 +56,7 @@ class Form extends DomElement {
   }
 
   input(prors) {
-    return this[prors.type] ? this[prors.type](prors) : '';
+    return this[prors.type] ? this[prors.type](prors) : "";
   }
 
   text(prors) {
@@ -62,7 +80,12 @@ class Form extends DomElement {
       <div class="col-lg-3">
         <select name="${prors.name}" class="form-select">
           <option value="" disabled hidden selected>${prors.label}</option>
-          ${prors.options.map(option => `<option value="${option.value}">${option.text}</option>`).join()}
+          ${prors.options
+            .map(
+              (option) =>
+                `<option value="${option.value}">${option.text}</option>`
+            )
+            .join()}
         </select>
       </div>
     `;
@@ -78,35 +101,39 @@ class Form extends DomElement {
       </div>
     `;
   }
-  
+
   list(prors) {
     return `
       <div class="col-lg-3">
         <div class="form-check">
           <label class="form-check-label">${prors.label}</label>
           <fieldset class="row justify-content-start">
-            ${prors.list.map(item => this.checkbox(item)).join('')}
+            ${prors.list.map((item) => this.checkbox(item)).join("")}
           </fieldset>
         </div>
       </div>
     `;
   }
-  
+
   init() {
-    this.elem.addEventListener('submit', event => {
+    this.elem.addEventListener("submit", (event) => {
       const formData = new FormData(event.target);
-      const body = {type: this.type};
+      const body = { type: this.type };
 
       event.preventDefault();
 
       for (const key of formData.keys()) {
         const values = formData.getAll(key);
 
-        body[key] = values.length - 1 ? values : values[0] === 'true' ? true : values[0];
+        body[key] =
+          values.length - 1 ? values : values[0] === "true" ? true : values[0];
       }
-      
+
+      this.elem.innerHTML = "";
       this.storage.add(body);
-      console.log(this.storage)
+      this.table.render();
+      this.handler?.render();
+      this.handler = null;
     });
   }
 }
