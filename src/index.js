@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./css/index.css";
 import "./index.html";
 
 import Storage from "./js/components/elements/Storage";
