@@ -31,6 +31,7 @@ class Frontend extends Worker {
         list: [
           {
             label: "HTML",
+            for: "html",
             tag: "input",
             type: "checkbox",
             value: "html",
@@ -38,6 +39,7 @@ class Frontend extends Worker {
           },
           {
             label: "CSS",
+            for: "css",
             tag: "input",
             type: "checkbox",
             value: "css",
@@ -45,6 +47,7 @@ class Frontend extends Worker {
           },
           {
             label: "SCSS",
+            for: "scss",
             tag: "input",
             type: "checkbox",
             value: "scss",
@@ -52,6 +55,7 @@ class Frontend extends Worker {
           },
           {
             label: "JS",
+            for: "js",
             tag: "input",
             type: "checkbox",
             value: "js",
@@ -59,6 +63,7 @@ class Frontend extends Worker {
           },
           {
             label: "React",
+            for: "react",
             tag: "input",
             type: "checkbox",
             value: "react",
@@ -66,6 +71,7 @@ class Frontend extends Worker {
           },
           {
             label: "Redux",
+            for: "redux",
             tag: "input",
             type: "checkbox",
             value: "redux",
@@ -73,6 +79,7 @@ class Frontend extends Worker {
           },
           {
             label: "Vue",
+            for: "vue",
             tag: "input",
             type: "checkbox",
             value: "vue",
@@ -102,7 +109,11 @@ class Frontend extends Worker {
   }
 
   get table() {
-    return [...super.table, this._experience, this._stack.join(', ')];
+    return [
+      ...super.table,
+      this._experience,
+      typeof this._stack === 'object' ? this._stack.join(', ') : this._stack
+    ];
   }
 }
 

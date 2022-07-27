@@ -15,10 +15,6 @@ class DomElement {
     return this._elem;
   }
 
-  set elem(value) {
-    return value;
-  }
-
   get parent() {
     return this.elem.parentElement;
   }

@@ -9,13 +9,9 @@ import ClassSelect from "./js/components/ClassSelect";
 import Form from "./js/components/Form";
 import Worker from "./js/components/Worker";
 import Table from "./js/components/Table";
+import Runner from "./js/components/Runner";
 
-const workerClasses = [Worker, Frontend];
-const workerClassesProps = workerClasses.reduce((obj, Item) => {
-  obj[Item.type] = Item.props;
-
-  return obj;
-}, {});
+const workerClasses = [Worker, Frontend, Runner];
 
 const storage = new Storage("worker", workerClasses);
 const table = new Table(storage);

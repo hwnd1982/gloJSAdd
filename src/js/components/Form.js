@@ -4,8 +4,51 @@ class Form extends DomElement {
   constructor(table) {
     super("form", ["mb-3"]);
     this._table = table;
+    this._table.form = this;
     this._handler = null;
+    this._data = {};
     this.init();
+  }
+
+  set handler(handler) {
+    this._handler = handler;
+  }
+
+  get select() {
+    return this._select;
+  }
+
+  set data(data) {
+    this._data = data;
+  }
+
+  get data() {
+    return this._data;
+  }
+
+  clean() {
+    this.data = {};
+  }
+
+  save(strict = false) {
+    const formData = new FormData(this._elem);
+    const body = {};
+
+    this.data.id && (body['id'] = this.data.id);
+    this.data.type && (body['type'] = this.data.type);
+    
+    for (const key of formData.keys()) {
+      const values = formData.getAll(key);
+
+      body[key] =
+        values.length - 1 ? values : values[0] === "true" ? true : values[0];
+    }
+
+    this.data.isChildren = !!body.isChildren;
+
+    strict ?
+      this.data = body :
+      this.data = {...this.data, ...body};
   }
 
   get table() {
@@ -24,9 +67,12 @@ class Form extends DomElement {
     return this._handler;
   }
 
-  render = ({ target }) => {
-    const props = this.storage.types[target.value].props;
+  render = (event, type) => {
+    const props = this.storage.types[type].props;
     let container = this.row();
+
+    this.data.type = type;
+    event === 'select' && this.save();
 
     this.elem.innerHTML = "";
     props.forEach((item, index) => {
@@ -44,7 +90,7 @@ class Form extends DomElement {
 
   row() {
     const row = document.createElement("div");
-    row.className = "row mb-3";
+    row.className = "row";
 
     this.children = [...(this.children ? this.children : []), row];
 
@@ -52,38 +98,61 @@ class Form extends DomElement {
   }
 
   button() {
-    return `<button id="add" class="btn btn-primary">Сохранить</button>`;
-  }
-
-  input(prors) {
-    return this[prors.type] ? this[prors.type](prors) : "";
-  }
-
-  text(prors) {
     return `
-      <div class="col-lg-3">
-        <input type="text" name="${prors.name}" class="form-control" placeholder="${prors.label}">
+      <div class="row row-cols-3 gap-2 mx-auto">
+        <button id="add" class="btn btn-primary mt-2">Сохранить</button>
+        <button id="cancel" type="button" class="btn btn-outline-primary mt-2">Отмена</button>
       </div>
     `;
   }
 
-  number(prors) {
+  input(props) {
+    return this[props.type] ? this[props.type](props) : "";
+  }
+
+  text(props) {
     return `
-      <div class="col-lg-3">
-        <input type="number" name="${prors.name}" class="form-control" placeholder="${prors.label}">
+      <div class="col-lg-3 mb-3">
+        <input
+          type="text"
+          name="${props.name}"
+          class="form-control"
+          placeholder="${props.label}"
+          value="${this.data[props.name] ? this.data[props.name] : ''}"
+        >
       </div>
     `;
   }
 
-  select(prors) {
+  number(props) {
     return `
-      <div class="col-lg-3">
-        <select name="${prors.name}" class="form-select">
-          <option value="" disabled hidden selected>${prors.label}</option>
-          ${prors.options
+      <div class="col-lg-3 mb-3">
+        <input
+          type="number"
+          name="${props.name}"
+          class="form-control"
+          placeholder="${props.label}"
+          value="${this.data[props.name] ? this.data[props.name] : ''}"
+        >
+      </div>
+    `;
+  }
+
+  select(props) {
+    return `
+      <div class="col-lg-3 mb-3">
+        <select
+          name="${props.name}"
+          class="form-select" 
+        >
+          <option value="" disabled hidden selected>${props.label}</option>
+          ${props.options
             .map(
               (option) =>
-                `<option value="${option.value}">${option.text}</option>`
+                `<option
+                  value="${option.value}"
+                  ${this.data[props.name] === option.value ? 'selected' : ''}
+                >${option.text}</option>`
             )
             .join()}
         </select>
@@ -92,23 +161,34 @@ class Form extends DomElement {
   }
 
   checkbox(props) {
+    const checked =
+      typeof this.data[props.name] === 'object' ? this.data[props.name].includes(props.value) :
+      this.data[props.name] === props.value;
+
     return `
       <div class="col-lg-3">
         <div class="form-check">
-          <input id="${props.name}" name="${props.name}" value="${props.value}" class="form-check-input" type="checkbox">
-          <label for="${props.name}" class="form-check-label">${props.label}</label>
+          <input
+            id="${props.for}"
+            name="${props.name}"
+            value="${props.value}"
+            class="form-check-input"
+            type="checkbox"
+            ${checked ? 'checked' : ''}
+          >
+          <label for="${props.for}" class="form-check-label">${props.label}</label>
         </div>
       </div>
     `;
   }
 
-  list(prors) {
+  list(props) {
     return `
-      <div class="col-lg-3">
+      <div class="col-lg-4 mb-3">
         <div class="form-check">
-          <label class="form-check-label">${prors.label}</label>
+          <label class="form-check-label">${props.label}</label>
           <fieldset class="row justify-content-start">
-            ${prors.list.map((item) => this.checkbox(item)).join("")}
+            ${props.list.map((item) => this.checkbox(item)).join("")}
           </fieldset>
         </div>
       </div>
@@ -116,24 +196,21 @@ class Form extends DomElement {
   }
 
   init() {
-    this.elem.addEventListener("submit", (event) => {
-      const formData = new FormData(event.target);
-      const body = { type: this.type };
-
+    this.elem.addEventListener("submit", event => {
       event.preventDefault();
-
-      for (const key of formData.keys()) {
-        const values = formData.getAll(key);
-
-        body[key] =
-          values.length - 1 ? values : values[0] === "true" ? true : values[0];
-      }
+      this.save(true);
+      this.elem.innerHTML = "";
+      this.storage.add(this.data);
+      this.handler.render();
+      this.table.render();
+      this.clean();
+    });
+    this.elem.addEventListener("click", event => {
+      if (event.target.id !== 'cancel') return;
 
       this.elem.innerHTML = "";
-      this.storage.add(body);
-      this.table.render();
-      this.handler?.render();
-      this.handler = null;
+      this.handler.render();
+      this.clean();
     });
   }
 }

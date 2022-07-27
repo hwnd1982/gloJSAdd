@@ -4,8 +4,8 @@ class Worker {
   static name = "Работник";
   static table = "Работники";
   static type = "Worker";
-  constructor({ firstName, lastName, age, gender, isChildren, profession }) {
-    this._id = uid();
+  constructor({id, firstName, lastName, age, gender, isChildren }) {
+    this._id = id || uid();
     this._type = "Worker";
     this._firstName = firstName;
     this._lastName = lastName;
@@ -31,6 +31,7 @@ class Worker {
       },
       {
         label: "Дети",
+        for: "isChildren",
         tag: "input",
         type: "checkbox",
         value: true,

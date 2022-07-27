@@ -5,17 +5,40 @@ class Table extends DomElement {
     super("div", ["accordion"], { attributes: { id: "accordionExample" } });
     this._tables = {};
     this._storage = storage;
+    this._del = true;
+    this._edit = true;
+    this.form = null;
 
     for (const key in storage.types) {
       this.table = storage.types[key];
     }
 
-    this._controls = new DomElement("tr");
-    this._controls.innerHTML = `<button class="btn btn-danger" id="delBtn0">Удалить</button>`;
-
+    this._controls = new DomElement("tr").elem;
     this.render();
+    this.init();
   }
 
+  set form(form) {
+    this._form = form;
+  }
+
+  get form() {
+    return this._form;
+  }
+
+  get controls() {
+    this._controls.innerHTML = `
+      <td colspan="1000">
+        ${this._del ? `<button id="del" class="btn btn-danger">Удалить</button>` : ''}
+        ${this._edit ? `<button id="edit" class="btn btn-primary">Изменить</button>` : ''}
+      </td>`;
+    return this._controls;
+  }
+
+  set controls({del = true, edit = true}) {
+    this._del = del;
+    this._edit = edit;
+  }
   get storage() {
     return this._storage;
   }
@@ -44,7 +67,7 @@ class Table extends DomElement {
             aria-labelledby="heading${data.type}"
             data-bs-parent="#accordionExample"
         >
-          <div class="accordion-body" id="data${data.type}">
+          <div class="accordion-body overflow-auto" id="data${data.type}">
             <table class="table">
               <thead>
                 <tr>
@@ -65,16 +88,36 @@ class Table extends DomElement {
     this.elem.addEventListener("click", this.open.bind(this));
   }
 
-  open({ target }) {
+  open = ({ target }) => {
     const button = target.closest(".accordion-button");
+    const item = target.closest('.table-item');
+    const del = target.closest('#del');
+    const edit = target.closest('#edit');
+    
+    switch (true) {
+      case !!item: 
+        item.after(this.controls);
+        return;
+      case !!del:
+        this.storage.remove(this.controls.previousElementSibling.id);
+        this.render();
+        return;
+      case !!edit:
+        const data = this.storage.getItem(this.controls.previousElementSibling.id).data
 
-    if (!button) return;
-
-    button.classList.toggle("collapsed");
-    document
-      .getElementById(button.dataset.bsTarget.slice(1))
-      .classList.toggle(button.dataset.bsToggle);
-  }
+        this.form.data = data;
+        this.form.handler.render(data.type)
+        this.form?.render('edit', data.type);
+        this.render();
+        return;
+      case !!button:
+        button.classList.toggle("collapsed");
+        document
+          .getElementById(button.dataset.bsTarget.slice(1))
+          .classList.toggle(button.dataset.bsToggle);
+        return;
+    }
+  };
 
   clean() {
     for (const key in this.table) this.table[key].textContent = "";
@@ -83,7 +126,7 @@ class Table extends DomElement {
   render = () => {
     this.clean();
     this.storage.data.forEach((item) => {
-      const row = new DomElement("tr");
+      const row = new DomElement("tr", ['table-item'], {attributes: {id: item.table[0]}});
 
       row.elem.innerHTML = `${item.table
         .map((td) => `<td>${td}</td>`)

@@ -6,6 +6,7 @@ class ClassSelect extends DomElement {
     this._form = form;
     this.render();
     this.init();
+    this._form.handler = this;
   }
 
   get form() {
@@ -20,18 +21,23 @@ class ClassSelect extends DomElement {
     return this._form.table.storage;
   }
 
-  render = () => {
+  render = (selected) => {
     this.elem.textContent = "";
-    this.elem.innerHTML = `<option value="" selected disabled hidden value="">Выберите специальность...</option>`;
+    this.elem.innerHTML = `<option value=""
+      ${!selected && 'selected'}
+      disabled
+      hidden value=""
+    >Выберите специальность...</option>`;
     for (const key in this.storage.types)
-      this.elem.innerHTML += `<option value="${key}">${this.storage.types[key].name}</option>`;
+      this.elem.innerHTML += `<option
+        value="${key}"
+        ${selected === key && 'selected'}
+      >${this.storage.types[key].name}</option>`;
   };
 
   init() {
-    this.elem.addEventListener("change", (event) => {
-      this.form.handler = this;
-      this.form.render(event);
-    });
+    this.form.handler = this;
+    this.elem.addEventListener("change", ({target}) => this.form.render('select', target.value));
   }
 }
 
