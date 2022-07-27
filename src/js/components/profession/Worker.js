@@ -1,4 +1,4 @@
-import uid from "../utils/uid.js";
+import uid from "../../utils/uid.js";
 
 class Worker {
   static name = "Работник";

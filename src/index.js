@@ -1,23 +1,22 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.html";
-import "./css/index.css";
-import "./scss/index.scss";
-import Storage from "./js/components/Storage";
-import Frontend from "./js/components/Frontend";
-import DomElement from "./js/components/DomElement";
-import ClassSelect from "./js/components/ClassSelect";
-import Form from "./js/components/Form";
-import Worker from "./js/components/Worker";
-import Table from "./js/components/Table";
-import Runner from "./js/components/Runner";
+
+import Storage from "./js/components/elements/Storage";
+import Frontend from "./js/components/profession/Frontend";
+import DomElement from "./js/components/elements/DomElement";
+import ClassSelect from "./js/components/elements/ClassSelect";
+import Form from "./js/components/elements/Form";
+import Worker from "./js/components/profession/Worker";
+import Table from "./js/components/elements/Table";
+import Runner from "./js/components/profession/Runner";
 
 const workerClasses = [Worker, Frontend, Runner];
 
 const storage = new Storage("worker", workerClasses);
+
 const table = new Table(storage);
 const form = new Form(table);
 const select = new ClassSelect(form);
-
 const query = new DomElement("div", ["col-lg-12"], {
   children: [select.elem, form.elem],
 });
