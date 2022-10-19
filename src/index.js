@@ -16,14 +16,12 @@ const workerClasses = [Worker, Frontend, Runner];
 const storage = new Storage("worker", workerClasses);
 
 const table = new Table(storage);
-const form = new Form(table);
-const select = new ClassSelect(form);
-const query = new DomElement("div", ["col-lg-12"], {
-  children: [select.elem, form.elem],
-});
+const form = new Form(storage);
+const select = new ClassSelect(storage);
+const query = new DomElement("div", ["col-lg-12"], { children: [select.elem, form.elem] });
 const veiw = new DomElement("div", ["col-lg-12"], { children: [table.elem] });
 
-const app = new DomElement("div", ["container", "mt-5"], {
+new DomElement("div", ["container", "mt-5"], {
   parent: document.getElementById("app"),
   children: [query.elem, veiw.elem],
 });

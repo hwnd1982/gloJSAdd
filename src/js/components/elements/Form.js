@@ -1,21 +1,15 @@
 import DomElement from "./DomElement";
 
 class Form extends DomElement {
-  constructor(table) {
+  constructor(storage) {
     super("form", ["mb-3"]);
-    this._table = table;
-    this._table.form = this;
-    this._handler = null;
+    this._storage = storage;
     this._data = {};
     this.init();
   }
 
-  set handler(handler) {
-    this._handler = handler;
-  }
-
   get select() {
-    return this._select;
+    return this.storage.select;
   }
 
   set data(data) {
@@ -52,19 +46,19 @@ class Form extends DomElement {
   }
 
   get table() {
-    return this._table;
+    return this._storage.table;
   }
 
   get storage() {
-    return this._table.storage;
+    return this._storage;
   }
 
-  set handler(handler) {
-    this._handler = handler;
+  set select(select) {
+    this._select = select;
   }
 
-  get handler() {
-    return this._handler;
+  get select() {
+    return this._select;
   }
 
   render = (event, type) => {
@@ -196,20 +190,21 @@ class Form extends DomElement {
   }
 
   init() {
+    this.storage.form = this;
     this.elem.addEventListener("submit", event => {
       event.preventDefault();
       this.save(true);
       this.elem.innerHTML = "";
       this.storage.add(this.data);
-      this.handler.render();
-      this.table.render();
+      this.storage.select.render();
+      this.storage.table.render();
       this.clean();
     });
     this.elem.addEventListener("click", event => {
       if (event.target.id !== 'cancel') return;
 
       this.elem.innerHTML = "";
-      this.handler.render();
+      this.storage.select.render();
       this.clean();
     });
   }

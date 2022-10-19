@@ -7,7 +7,6 @@ class Table extends DomElement {
     this._storage = storage;
     this._del = true;
     this._edit = true;
-    this.form = null;
 
     for (const key in storage.types) {
       this.table = storage.types[key];
@@ -18,12 +17,8 @@ class Table extends DomElement {
     this.init();
   }
 
-  set form(form) {
-    this._form = form;
-  }
-
   get form() {
-    return this._form;
+    return this._storage.form;
   }
 
   get controls() {
@@ -39,6 +34,7 @@ class Table extends DomElement {
     this._del = del;
     this._edit = edit;
   }
+
   get storage() {
     return this._storage;
   }
@@ -85,6 +81,7 @@ class Table extends DomElement {
   }
 
   init() {
+    this.storage.table = this;
     this.elem.addEventListener("click", this.open.bind(this));
   }
 
@@ -103,11 +100,11 @@ class Table extends DomElement {
         this.render();
         return;
       case !!edit:
-        const data = this.storage.getItem(this.controls.previousElementSibling.id).data
+        const data = this.storage.getItem(this.controls.previousElementSibling.id).data;
 
-        this.form.data = data;
-        this.form.handler.render(data.type)
-        this.form?.render('edit', data.type);
+        this.storage.form.data = data;
+        this.storage.select?.render(data.type)
+        this.storage.form?.render('edit', data.type);
         this.render();
         return;
       case !!button:

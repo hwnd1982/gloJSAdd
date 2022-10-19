@@ -1,24 +1,23 @@
 import DomElement from "./DomElement";
 
 class ClassSelect extends DomElement {
-  constructor(form) {
+  constructor(storage) {
     super("select", ["form-select", "mb-3"]);
-    this._form = form;
+    this._storage = storage;
     this.render();
     this.init();
-    this._form.handler = this;
   }
 
   get form() {
-    return this._form;
+    return this._storage.form;
   }
 
   get table() {
-    return this._form.table;
+    return this._storage.table;
   }
 
   get storage() {
-    return this._form.table.storage;
+    return this._storage;
   }
 
   render = (selected) => {
@@ -36,7 +35,7 @@ class ClassSelect extends DomElement {
   };
 
   init() {
-    this.form.handler = this;
+    this.storage.select = this;
     this.elem.addEventListener("change", ({target}) => this.form.render('select', target.value));
   }
 }
